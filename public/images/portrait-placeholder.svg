@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="700" viewBox="0 0 640 700" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="74" y1="21" x2="568" y2="680" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#D8E4B8"/>
+      <stop offset=".53" stop-color="#A9B98C"/>
+      <stop offset="1" stop-color="#BC9075"/>
+    </linearGradient>
+    <linearGradient id="shirt" x1="182" y1="478" x2="465" y2="697" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#69715A"/>
+      <stop offset="1" stop-color="#3F493D"/>
+    </linearGradient>
+  </defs>
+  <path fill="url(#bg)" d="M0 0h640v700H0z"/>
+  <g opacity=".55" stroke="#F6F0D8">
+    <ellipse cx="315" cy="331" rx="275" ry="128" transform="rotate(-25 315 331)"/>
+    <ellipse cx="319" cy="348" rx="297" ry="119" transform="rotate(36 319 348)"/>
+  </g>
+  <circle cx="493" cy="124" r="49" fill="#F2D9A0"/>
+  <path d="M158 700c8-112 66-202 166-205 110-4 177 76 186 205H158Z" fill="url(#shirt)"/>
+  <path d="M294 437h89l42 74c-56 44-122 43-176 0l45-74Z" fill="#AE694D"/>
+  <path d="M258 205c15-86 183-102 209 4l-11 157c-5 76-51 127-114 128-67 0-116-54-120-128l-4-161Z" fill="#B77453"/>
+  <path d="M235 240c-6-95 57-149 136-147 87 2 128 55 119 149-31-15-49-49-53-79-33 30-93 44-160 45l-42 32Z" fill="#342B26"/>
+  <path d="M441 211c37 26 38 83 31 134-5 39-22 70-40 82l10-216Z" fill="#342B26"/>
+  <path d="M295 322c9-6 19-6 28-2M375 319c9-6 18-5 26 1" stroke="#432F29" stroke-width="5" stroke-linecap="round"/>
+  <path d="M338 393c17 9 35 7 49-4" stroke="#793E38" stroke-width="4" stroke-linecap="round"/>
+  <text x="43" y="55" fill="#26342A" font-family="Arial,sans-serif" font-size="13" font-weight="700" letter-spacing="2">A WORK IN PROGRESS</text>
+  <text x="44" y="654" fill="#F4EEDB" font-family="Georgia,serif" font-size="34" font-style="italic">The person behind the pixels.</text>
+</svg>
