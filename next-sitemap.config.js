@@ -2,5 +2,5 @@
 module.exports = {
   siteUrl: process.env.SITE_URL || "https://your-domain.com",
   generateRobotsTxt: true,
-  exclude: ["/work/[slug]"],
+  exclude: ["/work/[slug]", "/admin"],
 };

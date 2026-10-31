@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { CtaPair } from "@/components/sections/CtaPair";
 import { FinalCta } from "@/components/sections/FinalCta";
@@ -6,12 +7,13 @@ import { Container, Section } from "@/components/ui/Section";
 import { VideoPlayer } from "@/components/work/VideoPlayer";
 import { WorkCard } from "@/components/work/WorkCard";
 import { site } from "@/data/site";
-import { featuredWork } from "@/data/work";
+import { getWorkItems } from "@/lib/content";
+import { mockBlogPosts } from "@/data/blog";
 const practices = [
     { number: "01", title: "Video editing", description: "Thoughtful cuts, a feeling-first edit, and motion that gives the story room to breathe.", href: "/work/video", symbol: "▶" },
     { number: "02", title: "Graphic design", description: "Distinctive identities and visual systems made to work in the real world.", href: "/work/design", symbol: "✳" },
     { number: "03", title: "Product & UX", description: "Research-led experiences that solve the right problem before polishing the pixels.", href: "/work?filter=UX%20%2F%20Product", symbol: "⌘" },
-    { number: "04", title: "AI prompt engineering", description: "Useful, responsible prompt systems that make everyday business work a little easier.", href: "/prompts", symbol: "✺" },
+    { number: "04", title: "AI & the future", description: "Personal thoughts on the changing tools, creative work and what comes next.", href: "/blog/thoughts-on-the-future-of-ai", symbol: "✺" },
 ];
 const process = [
     ["01", "Discover", "Listen first. Understand the people, the context and what success really means."],
@@ -81,9 +83,9 @@ export default function Home() {
           <div><p className="eyebrow"><span className="eyebrow-dot"/>SELECTED PROJECTS · 2023—25</p><h2>A few things<br /><span className="serif-italic">out in the world.</span></h2></div>
           <Link className="text-link" href="/work">All projects <span aria-hidden="true">↗</span></Link>
         </div>
-        <div className="work-grid work-grid--featured">
-          {featuredWork.map((item) => <Reveal key={item.slug}><WorkCard item={item} compact/></Reveal>)}
-        </div>
+        <Suspense fallback={<p className="admin-state" role="status">Loading selected work…</p>}>
+          <FeaturedProjects/>
+        </Suspense>
       </Section>
 
       <Section tone="soft" className="process-section">
@@ -96,21 +98,20 @@ export default function Home() {
       <Section className="ai-section">
         <div className="ai-layout">
           <div className="ai-copy">
-            <p className="eyebrow"><span className="eyebrow-dot"/>A PRACTICAL TAKE ON AI</p>
-            <h2>Less prompt<br />magic. <span className="serif-italic">More useful.</span></h2>
-            <p>AI is most helpful when it understands the job, the audience and the guardrails. I help teams build prompt workflows that make work clearer—not more complicated.</p>
+            <p className="eyebrow"><span className="eyebrow-dot"/>A PERSONAL TAKE ON AI</p>
+            <h2>AI is changing.<br /><span className="serif-italic">People still matter.</span></h2>
+            <p>I am curious about how AI will shape the way we create and work. The tools will keep evolving; care, curiosity and good judgement still belong in the process.</p>
             <ul className="service-list">
-              <li><span>01</span> Prompt audits & team workshops</li>
-              <li><span>02</span> Business-ready prompt libraries</li>
-              <li><span>03</span> Responsible AI workflow design</li>
+              <li><span>01</span> What new tools make possible</li>
+              <li><span>02</span> Where human judgement matters</li>
+              <li><span>03</span> How creative work might change</li>
             </ul>
-            <Link className="text-link" href="/prompts">Explore the prompt library <span aria-hidden="true">↗</span></Link>
+            <Link className="text-link" href={`/blog/${mockBlogPosts[1].slug}`}>Read my thoughts on AI <span aria-hidden="true">↗</span></Link>
           </div>
-          <div className="prompt-demo">
-            <div className="prompt-demo-head"><span className="prompt-demo-icon">✳</span><span>THE PROMPT, REFRAMED</span><span className="prompt-demo-status">BEFORE → AFTER</span></div>
-            <div className="prompt-before"><span className="demo-label">BEFORE · VAGUE</span><p>“Write me a marketing email for my new product.”</p></div>
-            <div className="prompt-after"><span className="demo-label">AFTER · CONTEXTUAL</span><p>“You’re a thoughtful copywriter. Draft a 120-word email for existing customers who value simplicity. Introduce [product] using only these verified benefits: [list]. Use a warm, plain-spoken tone. No urgency claims. End with one clear next step.”</p></div>
-            <p className="prompt-demo-foot">Better context. Better boundaries. Better work.</p>
+          <div className="ai-note">
+            <p className="eyebrow"><span className="eyebrow-dot"/>A NOTE TO THE FUTURE</p>
+            <blockquote>“The interesting question is not only what these tools can do, but what we choose to do with them.”</blockquote>
+            <Link className="text-link" href="/blog">More notes on the blog <span aria-hidden="true">↗</span></Link>
           </div>
         </div>
       </Section>
@@ -121,7 +122,7 @@ export default function Home() {
           <div><span className="tool-index">01 / PICTURE & SOUND</span><h3>Video & motion</h3><p>Premiere Pro <i>·</i> After Effects <i>·</i> DaVinci Resolve</p></div>
           <div><span className="tool-index">02 / SHAPE & COLOUR</span><h3>Design</h3><p>Photoshop <i>·</i> Illustrator <i>·</i> Figma</p></div>
           <div><span className="tool-index">03 / THINK & BUILD</span><h3>Product & development</h3><p>Next.js <i>·</i> JavaScript <i>·</i> Git <i>·</i> Notion</p></div>
-          <div><span className="tool-index">04 / MAKE IT USEFUL</span><h3>AI & research</h3><p>Prompt systems <i>·</i> LLMs <i>·</i> Interviews <i>·</i> Testing</p></div>
+          <div><span className="tool-index">04 / MAKE IT USEFUL</span><h3>AI & research</h3><p>LLMs <i>·</i> Creative workflows <i>·</i> Interviews <i>·</i> Testing</p></div>
         </div>
       </Section>
 
@@ -135,4 +136,13 @@ export default function Home() {
       </Section>
       <FinalCta />
     </main>);
+}
+
+async function FeaturedProjects() {
+    const featuredWork = (await getWorkItems()).filter((item) => item.featured);
+    return (
+      <div className="work-grid work-grid--featured">
+        {featuredWork.map((item) => <Reveal key={item.slug}><WorkCard item={item} compact/></Reveal>)}
+      </div>
+    );
 }

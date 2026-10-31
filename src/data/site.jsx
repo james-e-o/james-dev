@@ -8,7 +8,7 @@ export const site = {
     calendly: "https://calendly.com/",
     location: "Available worldwide · Based in the UK",
     availability: "Available for select projects",
-    resume: "/cv.pdf",
+    resume: "/James_Onwuasoanya_CV.pdf",
     socials: [
         { label: "Instagram", href: "https://instagram.com/" },
         { label: "LinkedIn", href: "https://linkedin.com/" },
@@ -18,7 +18,7 @@ export const site = {
 export const navigation = [
     { label: "Work", href: "/work" },
     { label: "About", href: "/about" },
-    { label: "Prompts", href: "/prompts" },
+    { label: "Blog", href: "/blog" },
     { label: "CV", href: "/cv" },
     { label: "Contact", href: "/contact" },
 ];

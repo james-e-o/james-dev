@@ -5,7 +5,7 @@ import { site } from "@/data/site";
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 export const metadata = {
-    metadataBase: new URL("https://your-domain.com"),
+    metadataBase: new URL(process.env.SITE_URL ?? "https://your-domain.com"),
     title: {
         default: `${site.fullName} — Creative, editor & product-minded developer`,
         template: `%s — ${site.fullName}`,

@@ -1,7 +1,8 @@
+import { Suspense } from "react";
 import { PageCta } from "@/components/sections/PageCta";
 import { PageIntro } from "@/components/sections/PageIntro";
 import { WorkFilters } from "@/components/work/WorkFilters";
-import { workItems } from "@/data/work";
+import { getWorkItems } from "@/lib/content";
 export const metadata = {
     title: "Work",
     description: "Selected video, design, product, development and AI work.",
@@ -14,8 +15,14 @@ export default function WorkPage() {
         </PageIntro>
       </div>
       <section className="container page-content" aria-label="Portfolio projects">
-        <WorkFilters items={workItems}/>
+        <Suspense fallback={<p className="admin-state" role="status">Loading projects…</p>}>
+          <ProjectListing/>
+        </Suspense>
       </section>
       <PageCta />
     </main>);
+}
+
+async function ProjectListing() {
+    return <WorkFilters items={await getWorkItems()}/>;
 }

@@ -15,7 +15,7 @@ npx create-next-app@latest my-portfolio --js --tailwind --eslint --app --src-dir
 Then from the new project directory, add the dependencies used here:
 
 ```bash
-npm install framer-motion @next/mdx @mdx-js/loader @mdx-js/react next-sitemap
+npm install framer-motion @next/mdx @mdx-js/loader @mdx-js/react next-sitemap @supabase/supabase-js react-markdown tus-js-client
 ```
 
 This repository is already scaffolded; the command above is provided for recreating it elsewhere.
@@ -31,22 +31,23 @@ The development server uses port `3001`; open <http://localhost:3001>. Run a pro
 
 ## Routes
 
-- `/` — introduction, disciplines, reel, featured work, process, AI prompt example, tools and testimonials.
+- `/` — introduction, disciplines, reel, featured work, process, notes on AI, tools and testimonials.
 - `/work` — filterable portfolio.
 - `/work/video` — reel and four sample video projects.
 - `/work/design` — a mixed visual gallery of eight sample design pieces and four video thumbnails. Portrait edits use 9:16 framing; a widescreen edit uses 16:9. Design pieces open in a keyboard-operable lightbox (Escape and arrow keys), while video thumbnails link to their project pages or an external video URL.
 - `/work/[slug]` — project pages; the `clear-day` and `made-for-more` case studies render MDX from `content/case-studies/`.
 - `/cv` — on-page CV, PDF download and embedded PDF.
-- `/prompts` — six editable business prompt examples.
+- `/blog` and `/blog/[slug]` — two sample opinion posts about web building and the future of AI.
+- `/admin` — Supabase-authenticated editor for projects, image/video uploads and blog posts.
 - `/about` and `/contact` — personal story and contact options.
 
-All routes end with the reusable work/CV CTA pair. The sticky navigation has five primary links and a persistent CV button.
+Public routes end with the reusable work/CV CTA pair. The sticky navigation has five primary links and a persistent CV button.
 
 ## Edit the content
 
 - `src/data/site.jsx` — name, positioning, email, location, booking link and socials.
 - `src/data/work.jsx` — portfolio records, discipline tags, tools, roles, years and visual placeholder colors. The work hub and both discipline pages read from this file.
-- `src/data/prompts.jsx` — prompt library content and categories.
+- `src/data/blog.jsx` — sample blog posts shown until Supabase is configured.
 - `src/data/resume.jsx` — CV experience, skills and education.
 - `src/app/page.jsx` — landing page narrative, process steps and tools; update placeholder testimonials there too.
 - `content/case-studies/` — project story content, written in MDX.
@@ -70,7 +71,7 @@ Add a `Video Editing` record to `workItems` in `src/data/work.jsx` with `mediaOr
 
 ## Replace the CV
 
-Replace `public/cv.pdf` with your up-to-date PDF, keeping that exact filename, or update `resume` in `src/data/site.jsx` and the embedded viewer/download references. Edit the on-page experience, skills and education in `src/data/resume.jsx` and `src/app/cv/page.jsx`. Verify the CV is readable at mobile widths and that the PDF is accessible.
+The CV download and embedded viewer use `public/James_Onwuasoanya_CV.pdf`, configured by `resume` in `src/data/site.jsx`. Replace that file when updating the PDF, or update `resume` to point to a different file. Edit the on-page experience, skills and education in `src/data/resume.jsx` and `src/app/cv/page.jsx`. Verify the CV is readable at mobile widths and that the PDF is accessible.
 
 ## Deploy to Vercel
 
@@ -78,6 +79,8 @@ Replace `public/cv.pdf` with your up-to-date PDF, keeping that exact filename, o
 2. Set `SITE_URL` to your production origin (for example `https://your-domain.com`). `next-sitemap` uses this value after the production build; update `metadataBase` in `src/app/layout.jsx` to match.
 3. Deploy with the default Next.js build command, `npm run build`. The `postbuild` script writes `sitemap.xml` and `robots.txt`.
 4. Before launch, replace all placeholder identity details, portrait/media, sample testimonials and CV; verify each social, contact and booking URL.
+
+To enable `/admin` and publish edits from Supabase, follow [Supabase upload setup](./SUPABASE_UPLOAD_SETUP.md), including the database schema, Storage bucket, RLS policies and sample blog post seed. Add the Supabase URL and publishable key to `.env.local`; never expose a service-role key. Without Supabase configuration, the blog and portfolio use their sample content and the admin editor remains unavailable.
 
 ## Accessibility and performance notes
 

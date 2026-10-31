@@ -1,24 +1,38 @@
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
+import Image from "next/image";
+import ReactMarkdown from "react-markdown";
 import { PageCta } from "@/components/sections/PageCta";
 import { Artwork } from "@/components/work/Artwork";
 import { Tag } from "@/components/ui/Tag";
-import { workItems } from "@/data/work";
+import { getWorkItems } from "@/lib/content";
 import { caseStudies } from "@/lib/caseStudies";
+import { workItems as sampleWorkItems } from "@/data/work";
 export function generateStaticParams() {
-    return workItems.map(({ slug }) => ({ slug }));
+    return sampleWorkItems.map(({ slug }) => ({ slug }));
 }
 export async function generateMetadata({ params, }) {
     const { slug } = await params;
-    const item = workItems.find((work) => work.slug === slug);
+    const item = sampleWorkItems.find((work) => work.slug === slug);
     return item ? { title: item.title, description: item.description } : {};
 }
-export default async function ProjectPage({ params }) {
+export default function ProjectPage({ params }) {
+    return (<main id="main" className="page-main">
+      <Suspense fallback={<p className="container admin-state" role="status">Loading project…</p>}>
+        <ProjectContent params={params}/>
+      </Suspense>
+      <PageCta />
+    </main>);
+}
+
+async function ProjectContent({ params }) {
     const { slug } = await params;
-    const item = workItems.find((work) => work.slug === slug);
+    const item = (await getWorkItems()).find((work) => work.slug === slug);
     if (!item)
         notFound();
     const CaseStudy = caseStudies[slug];
-    return (<main id="main" className="page-main">
+    return (
+      <>
       <div className="container page-hero">
         <p className="eyebrow"><span className="eyebrow-dot"/>{item.year} · SELECTED WORK</p>
         <Tag>{item.discipline}</Tag>
@@ -30,19 +44,28 @@ export default async function ProjectPage({ params }) {
           <div><dt>Year</dt><dd>{item.year}</dd></div>
         </dl>
       </div>
-      <div className="container project-cover"><Artwork item={item}/></div>
+      <div className="container project-cover">
+        <Artwork item={item} videoControls/>
+        {item.media?.slice(1).map((asset, index) => asset.type === "video" ? (
+          <video className="project-media-extra" key={`${asset.url}-${index}`} src={asset.url} controls preload="metadata" aria-label={asset.alt}/>
+        ) : (
+          <Image className="project-media-extra" key={`${asset.url}-${index}`} src={asset.url} alt={asset.alt} width={1400} height={900} unoptimized/>
+        ))}
+      </div>
       <div className="container project-body">
         <nav className="project-toc" aria-label="On this page">
           <a href="#brief">The brief</a><a href="#process">The process</a><a href="#outcome">The outcome</a>
         </nav>
         <article className="mdx-content">
-          {CaseStudy ? (<CaseStudy />) : (<>
+          {item.body ? (
+            <section id="brief"><ReactMarkdown>{item.body}</ReactMarkdown></section>
+          ) : CaseStudy ? (<CaseStudy />) : (<>
               <section id="brief"><h2>The brief</h2><p>{item.description} This sample project page is here to show the case-study format. Replace this overview with the real brief, context and audience when you add your project details.</p></section>
               <section id="process"><h2>The process</h2><p>I started by getting clear on the people and the problem, then explored a few directions before making and refining the work. The work was shaped around the real context rather than a template solution.</p><ul><li>Listen to the brief and surface open questions.</li><li>Explore a small number of considered routes.</li><li>Test, refine and prepare a useful handover.</li></ul></section>
               <section id="outcome"><h2>The outcome</h2><p>A thoughtful, audience-aware piece of work. Add approved outcome measures and before/after examples here; no metrics are invented for this placeholder.</p></section>
             </>)}
         </article>
       </div>
-      <PageCta />
-    </main>);
+      </>
+    );
 }
